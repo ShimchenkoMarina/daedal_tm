@@ -297,7 +297,7 @@ protected:
   // The contents of Set and DepSet are only reliable if the result
   // is true.
   bool followDeps(set<Instruction *> &Set, set<Instruction *> &DepSet,
-                  bool followStores = true, bool followCalls = true) {
+                  bool followStores = true) {
     bool res = true;
     queue<Instruction *> Q;
     for (set<Instruction *>::iterator I = Set.begin(), E = Set.end();
@@ -328,9 +328,6 @@ protected:
         // Follow load/store
         if (followStores && LoadInst::classof(Inst)) {
           enqueueStores((LoadInst *)Inst, DepSet, Q);
-        }
-        if (followCalls) {
-          res = checkCalls(Inst);
         }
       }
     }
@@ -424,54 +421,6 @@ protected:
       }
       first = false;
     }
-  }
-
-  bool checkCalls(Instruction *I) {
-    bool hasNoModifyingCalls = true;
-
-    BasicBlock *InstBB = I->getParent();
-    std::queue<BasicBlock *> BBQ;
-    std::set<BasicBlock *> BBSet;
-
-    BBQ.push(InstBB);
-    // Collect all predecessor blocks
-    while (!BBQ.empty()) {
-      BasicBlock *BB = BBQ.front();
-      BBQ.pop();
-      for (pred_iterator pI = pred_begin(BB), pE = pred_end(BB); pI != pE;
-           ++pI) {
-        if (BBSet.insert(*pI).second) {
-          BBQ.push(*pI);
-        }
-      }
-    }
-
-    for (Value::user_iterator U = I->user_begin(), UE = I->user_end();
-         U != UE && hasNoModifyingCalls; ++U) {
-      Instruction *UserInst = (Instruction *)*U;
-      for (Value::user_iterator UU = UserInst->user_begin(),
-                                UUE = UserInst->user_end();
-           UU != UUE && hasNoModifyingCalls; ++UU) {
-        if (!CallInst::classof(*UU)) {
-          continue;
-        }
-
-        if (BBSet.find(((Instruction *)(*UU))->getParent()) == BBSet.end()) {
-          continue;
-        }
-
-        CallInst *Call = (CallInst *)*UU;
-        hasNoModifyingCalls = Call->onlyReadsMemory();
-
-        // Allow prefetches
-        if (!hasNoModifyingCalls && isa<IntrinsicInst>(Call) &&
-            ((IntrinsicInst *)Call)->getIntrinsicID() == Intrinsic::prefetch) {
-          hasNoModifyingCalls = true;
-        }
-      }
-    }
-
-    return hasNoModifyingCalls;
   }
 
   // Returns true iff Pointer does have a local destination.
