@@ -1,0 +1,149 @@
+make[1]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-ssca2/src'
+make PERF_TOOL= -C ../../STAMP-include/perf
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make -f Makefile.empty
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make -C ../../STAMP-include
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include'
+make -C lib 
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/lib'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/lib'
+make -C gem5 
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/gem5'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/gem5'
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include'
+make ../bin/STAMP-ssca2.original.V3
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-ssca2/src'
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module -I ../../STAMP-include/lib alg_radix_smp.c -S -emit-llvm -o ../bin/alg_radix_smp.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-ssca2 \
+	-o ../bin/alg_radix_smp.marked.ll ../bin/alg_radix_smp.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-ssca2 -mem2reg -o ../bin/alg_radix_smp.extracted.ll ../bin/alg_radix_smp.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/alg_radix_smp.dae.V3.ll ../bin/alg_radix_smp.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module -I ../../STAMP-include/lib computeGraph.c -S -emit-llvm -o ../bin/computeGraph.V3.ll
+computeGraph.c:278:35: warning: comparison of unsigned expression >= 0 is always true [-Wtautological-compare]
+            if (numEdgesPlaced-i0 >= 0) {
+                ~~~~~~~~~~~~~~~~~ ^  ~
+computeGraph.c:378:35: warning: comparison of unsigned expression >= 0 is always true [-Wtautological-compare]
+            if (numEdgesPlaced-i0 >= 0) {
+                ~~~~~~~~~~~~~~~~~ ^  ~
+2 warnings generated.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-ssca2 \
+	-o ../bin/computeGraph.marked.ll ../bin/computeGraph.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-ssca2 -mem2reg -o ../bin/computeGraph.extracted.ll ../bin/computeGraph.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/computeGraph.dae.V3.ll ../bin/computeGraph.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module -I ../../STAMP-include/lib createPartition.c -S -emit-llvm -o ../bin/createPartition.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-ssca2 \
+	-o ../bin/createPartition.marked.ll ../bin/createPartition.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-ssca2 -mem2reg -o ../bin/createPartition.extracted.ll ../bin/createPartition.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/createPartition.dae.V3.ll ../bin/createPartition.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module -I ../../STAMP-include/lib cutClusters.c -S -emit-llvm -o ../bin/cutClusters.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-ssca2 \
+	-o ../bin/cutClusters.marked.ll ../bin/cutClusters.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-ssca2 -mem2reg -o ../bin/cutClusters.extracted.ll ../bin/cutClusters.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/cutClusters.dae.V3.ll ../bin/cutClusters.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module -I ../../STAMP-include/lib findSubGraphs.c -S -emit-llvm -o ../bin/findSubGraphs.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-ssca2 \
+	-o ../bin/findSubGraphs.marked.ll ../bin/findSubGraphs.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-ssca2 -mem2reg -o ../bin/findSubGraphs.extracted.ll ../bin/findSubGraphs.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/findSubGraphs.dae.V3.ll ../bin/findSubGraphs.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module -I ../../STAMP-include/lib genScalData.c -S -emit-llvm -o ../bin/genScalData.V3.ll
+genScalData.c:477:34: warning: comparison of unsigned expression >= 0 is always true [-Wtautological-compare]
+            if ((r0 <= p) && (i-d>=0)) {
+                              ~~~^ ~
+genScalData.c:1248:34: warning: comparison of unsigned expression >= 0 is always true [-Wtautological-compare]
+            if ((r0 <= p) && (i-d>=0)) {
+                              ~~~^ ~
+2 warnings generated.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-ssca2 \
+	-o ../bin/genScalData.marked.ll ../bin/genScalData.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-ssca2 -mem2reg -o ../bin/genScalData.extracted.ll ../bin/genScalData.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/genScalData.dae.V3.ll ../bin/genScalData.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module -I ../../STAMP-include/lib getStartLists.c -S -emit-llvm -o ../bin/getStartLists.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-ssca2 \
+	-o ../bin/getStartLists.marked.ll ../bin/getStartLists.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-ssca2 -mem2reg -o ../bin/getStartLists.extracted.ll ../bin/getStartLists.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/getStartLists.dae.V3.ll ../bin/getStartLists.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module -I ../../STAMP-include/lib getUserParameters.c -S -emit-llvm -o ../bin/getUserParameters.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-ssca2 \
+	-o ../bin/getUserParameters.marked.ll ../bin/getUserParameters.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-ssca2 -mem2reg -o ../bin/getUserParameters.extracted.ll ../bin/getUserParameters.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/getUserParameters.dae.V3.ll ../bin/getUserParameters.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module -I ../../STAMP-include/lib globals.c -S -emit-llvm -o ../bin/globals.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-ssca2 \
+	-o ../bin/globals.marked.ll ../bin/globals.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-ssca2 -mem2reg -o ../bin/globals.extracted.ll ../bin/globals.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/globals.dae.V3.ll ../bin/globals.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module -I ../../STAMP-include/lib ssca2.c -S -emit-llvm -o ../bin/ssca2.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-ssca2 \
+	-o ../bin/ssca2.marked.ll ../bin/ssca2.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-ssca2 -mem2reg -o ../bin/ssca2.extracted.ll ../bin/ssca2.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/ssca2.dae.V3.ll ../bin/ssca2.extracted.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//llvm-link -S -o ../bin/STAMP-ssca2.dae.original.V3.ll ../bin/alg_radix_smp.dae.V3.ll ../bin/computeGraph.dae.V3.ll ../bin/createPartition.dae.V3.ll ../bin/cutClusters.dae.V3.ll ../bin/findSubGraphs.dae.V3.ll ../bin/genScalData.dae.V3.ll ../bin/getStartLists.dae.V3.ll ../bin/getUserParameters.dae.V3.ll ../bin/globals.dae.V3.ll ../bin/ssca2.dae.V3.ll ../../STAMP-include/lib/mt19937ar.O3.ll ../../STAMP-include/lib/random.O3.ll ../../STAMP-include/lib/thread.O3.ll ../../STAMP-include/lib/memory.O3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang++ -O3   -mrtm -Wno-override-module -pthread -DHTM -DOLD_RTM_MACROSES -DENABLE_KERNEL1  -mrtm -Wno-override-module ../bin/STAMP-ssca2.dae.original.V3.ll ../bin/STAMP-ssca2.GV_DAE.ll ../../STAMP-include/gem5/m5op_x86.o ../../STAMP-include/gem5/m5ops_wrapper.o ../../STAMP-include/perf/perf_counters.o  -static /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libDAE_prof_ST.a -lcpufreq -o ../bin/STAMP-ssca2.original.V3
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-ssca2/src'
+make[1]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-ssca2/src'

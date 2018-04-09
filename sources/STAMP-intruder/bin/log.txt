@@ -1,0 +1,102 @@
+make[1]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-intruder/src'
+make PERF_TOOL= -C ../../STAMP-include/perf
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make -f Makefile.empty
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make -C ../../STAMP-include
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include'
+make -C lib 
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/lib'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/lib'
+make -C gem5 
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/gem5'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/gem5'
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include'
+make ../bin/STAMP-intruder.original.V3
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-intruder/src'
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib decoder.c -S -emit-llvm -o ../bin/decoder.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-intruder \
+	-o ../bin/decoder.marked.ll ../bin/decoder.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-intruder -mem2reg -o ../bin/decoder.extracted.ll ../bin/decoder.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/decoder.dae.V3.ll ../bin/decoder.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib detector.c -S -emit-llvm -o ../bin/detector.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-intruder \
+	-o ../bin/detector.marked.ll ../bin/detector.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-intruder -mem2reg -o ../bin/detector.extracted.ll ../bin/detector.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/detector.dae.V3.ll ../bin/detector.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib dictionary.c -S -emit-llvm -o ../bin/dictionary.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-intruder \
+	-o ../bin/dictionary.marked.ll ../bin/dictionary.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-intruder -mem2reg -o ../bin/dictionary.extracted.ll ../bin/dictionary.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/dictionary.dae.V3.ll ../bin/dictionary.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib intruder.c -S -emit-llvm -o ../bin/intruder.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-intruder \
+	-o ../bin/intruder.marked.ll ../bin/intruder.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-intruder -mem2reg -o ../bin/intruder.extracted.ll ../bin/intruder.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/intruder.dae.V3.ll ../bin/intruder.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib packet.c -S -emit-llvm -o ../bin/packet.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-intruder \
+	-o ../bin/packet.marked.ll ../bin/packet.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-intruder -mem2reg -o ../bin/packet.extracted.ll ../bin/packet.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/packet.dae.V3.ll ../bin/packet.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib preprocessor.c -S -emit-llvm -o ../bin/preprocessor.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-intruder \
+	-o ../bin/preprocessor.marked.ll ../bin/preprocessor.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-intruder -mem2reg -o ../bin/preprocessor.extracted.ll ../bin/preprocessor.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/preprocessor.dae.V3.ll ../bin/preprocessor.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib stream.c -S -emit-llvm -o ../bin/stream.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-intruder \
+	-o ../bin/stream.marked.ll ../bin/stream.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-intruder -mem2reg -o ../bin/stream.extracted.ll ../bin/stream.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/stream.dae.V3.ll ../bin/stream.extracted.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//llvm-link -S -o ../bin/STAMP-intruder.dae.original.V3.ll ../bin/decoder.dae.V3.ll ../bin/detector.dae.V3.ll ../bin/dictionary.dae.V3.ll ../bin/intruder.dae.V3.ll ../bin/packet.dae.V3.ll ../bin/preprocessor.dae.V3.ll ../bin/stream.dae.V3.ll ../../STAMP-include/lib/list.O3.ll ../../STAMP-include/lib/mt19937ar.O3.ll ../../STAMP-include/lib/pair.O3.ll ../../STAMP-include/lib/queue.O3.ll ../../STAMP-include/lib/random.O3.ll ../../STAMP-include/lib/rbtree.O3.ll ../../STAMP-include/lib/thread.O3.ll ../../STAMP-include/lib/vector.O3.ll ../../STAMP-include/lib/memory.O3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang++ -O3   -mrtm -Wno-override-module -pthread -DHTM -DOLD_RTM_MACROSES -DMAP_USE_RBTREE  -mrtm -Wno-override-module ../bin/STAMP-intruder.dae.original.V3.ll ../bin/STAMP-intruder.GV_DAE.ll ../../STAMP-include/gem5/m5op_x86.o ../../STAMP-include/gem5/m5ops_wrapper.o ../../STAMP-include/perf/perf_counters.o  -static /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libDAE_prof_ST.a -lcpufreq -o ../bin/STAMP-intruder.original.V3
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-intruder/src'
+make[1]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-intruder/src'

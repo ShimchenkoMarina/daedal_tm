@@ -1,0 +1,112 @@
+make[1]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-genome/src'
+make PERF_TOOL= -C ../../STAMP-include/perf
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make -f Makefile.empty
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make -C ../../STAMP-include
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include'
+make -C lib 
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/lib'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/lib'
+make -C gem5 
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/gem5'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/gem5'
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include'
+make ../bin/STAMP-genome.original.V3
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-genome/src'
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12  -mrtm -Wno-override-module -I ../../STAMP-include/lib gene.c -S -emit-llvm -o ../bin/gene.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-genome \
+	-o ../bin/gene.marked.ll ../bin/gene.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-genome -mem2reg -o ../bin/gene.extracted.ll ../bin/gene.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/gene.dae.V3.ll ../bin/gene.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12  -mrtm -Wno-override-module -I ../../STAMP-include/lib genome.c -S -emit-llvm -o ../bin/genome.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-genome \
+	-o ../bin/genome.marked.ll ../bin/genome.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-genome -mem2reg -o ../bin/genome.extracted.ll ../bin/genome.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/genome.dae.V3.ll ../bin/genome.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12  -mrtm -Wno-override-module -I ../../STAMP-include/lib segments.c -S -emit-llvm -o ../bin/segments.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-genome \
+	-o ../bin/segments.marked.ll ../bin/segments.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-genome -mem2reg -o ../bin/segments.extracted.ll ../bin/segments.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/segments.dae.V3.ll ../bin/segments.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12  -mrtm -Wno-override-module -I ../../STAMP-include/lib sequencer.c -S -emit-llvm -o ../bin/sequencer.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-genome \
+	-o ../bin/sequencer.marked.ll ../bin/sequencer.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-genome -mem2reg -o ../bin/sequencer.extracted.ll ../bin/sequencer.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/sequencer.dae.V3.ll ../bin/sequencer.extracted.ll
+
+FKernelPrefetch: sequencer_run___kernel__tm__sequencer_run0:
+FKernelPrefetch: Max indirs: 25
+Load is detected   %loadgep_entryIndex.1 = load i64, i64* %gep_entryIndex.1
+Prefetch is done
+Load is detected   %loadgep_ = load i64, i64* %gep_
+Prefetch is done
+Load is detected   %loadgep_2 = load %struct.constructEntry*, %struct.constructEntry** %gep_1
+Prefetch is done
+Load is detected   %8 = load i8*, i8** %6, align 8, !tbaa !2FKernelPrefetch: Prefetches: Inserted: 4/4  (Bad: 0  Indir: 0  Red: 3)
+
+FKernelPrefetch: sequencer_run___kernel__tm__sequencer_run1:
+FKernelPrefetch: Max indirs: 25
+
+Prefetch is done
+Gde bly eta function
+Found call function
+Load is detected   %loadgep_i.0128 = load i64, i64* %gep_i.0128
+Prefetch is done
+Load is detected   %loadgep_ = load %struct.vector*, %struct.vector** %gep_
+Prefetch is done
+Load is detected   %loadgep_2 = load %struct.hashtable*, %struct.hashtable** %gep_1
+Prefetch is done
+Load is detected   %loadgep_4 = load i64, i64* %gep_3FKernelPrefetch: Prefetches: Inserted: 4/4  (Bad: 0  Indir: 0  Red: 0)
+
+Prefetch is done
+Gde bly eta function
+Found call function
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12  -mrtm -Wno-override-module -I ../../STAMP-include/lib table.c -S -emit-llvm -o ../bin/table.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-genome \
+	-o ../bin/table.marked.ll ../bin/table.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-genome -mem2reg -o ../bin/table.extracted.ll ../bin/table.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/table.dae.V3.ll ../bin/table.extracted.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//llvm-link -S -o ../bin/STAMP-genome.dae.original.V3.ll ../bin/gene.dae.V3.ll ../bin/genome.dae.V3.ll ../bin/segments.dae.V3.ll ../bin/sequencer.dae.V3.ll ../bin/table.dae.V3.ll ../../STAMP-include/lib/bitmap.O3.ll ../../STAMP-include/lib/hash.O3.ll ../../STAMP-include/lib/hashtable.O3.ll ../../STAMP-include/lib/pair.O3.ll ../../STAMP-include/lib/random.O3.ll ../../STAMP-include/lib/list.O3.ll ../../STAMP-include/lib/mt19937ar.O3.ll ../../STAMP-include/lib/thread.O3.ll ../../STAMP-include/lib/vector.O3.ll ../../STAMP-include/lib/memory.O3.ll
+touch ../bin/DAE-header.ll
+touch Globals.ll
+mv Globals.ll ../bin
+cat ../bin/DAE-header.ll ../bin/Globals.ll > ../bin/STAMP-genome.GV_DAE.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang++ -O3   -mrtm -Wno-override-module -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12  -mrtm -Wno-override-module ../bin/STAMP-genome.dae.original.V3.ll ../bin/STAMP-genome.GV_DAE.ll ../../STAMP-include/gem5/m5op_x86.o ../../STAMP-include/gem5/m5ops_wrapper.o ../../STAMP-include/perf/perf_counters.o  -static /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libDAE_prof_ST.a -lcpufreq -o ../bin/STAMP-genome.original.V3
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-genome/src'
+make[1]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-genome/src'

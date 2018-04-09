@@ -1,0 +1,125 @@
+make -C ../../STAMP-include
+make[1]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include'
+make -C lib 
+make[2]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include/lib'
+make[2]: No se hace nada para 'all'.
+make[2]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include/lib'
+make -C gem5 
+make[2]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include/gem5'
+make[2]: No se hace nada para 'all'.
+make[2]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include/gem5'
+make[1]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include'
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12 -mrtm -Wno-override-module -I ../../STAMP-include/lib gene.c -S -emit-llvm -o ../bin/gene.ll
+cat ../bin/gene.ll \
+| sed 's/tail \(call void @exit(\)/\1/g' \
+| sed 's/call void @exit(/call void @profiler_print_stats()\n  &/g' \
+| sed 's/declare void @exit(/declare void @profiler_print_stats()\n&/g' \
+> ../bin/gene.stats.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-genome \
+-o ../bin/gene.marked.ll ../bin/gene.stats.ll; \
+
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12 -mrtm -Wno-override-module -I ../../STAMP-include/lib genome.c -S -emit-llvm -o ../bin/genome.ll
+cat ../bin/genome.ll \
+| sed 's/tail \(call void @exit(\)/\1/g' \
+| sed 's/call void @exit(/call void @profiler_print_stats()\n  &/g' \
+| sed 's/declare void @exit(/declare void @profiler_print_stats()\n&/g' \
+> ../bin/genome.stats.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-genome \
+-o ../bin/genome.marked.ll ../bin/genome.stats.ll; \
+
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12 -mrtm -Wno-override-module -I ../../STAMP-include/lib segments.c -S -emit-llvm -o ../bin/segments.ll
+cat ../bin/segments.ll \
+| sed 's/tail \(call void @exit(\)/\1/g' \
+| sed 's/call void @exit(/call void @profiler_print_stats()\n  &/g' \
+| sed 's/declare void @exit(/declare void @profiler_print_stats()\n&/g' \
+> ../bin/segments.stats.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-genome \
+-o ../bin/segments.marked.ll ../bin/segments.stats.ll; \
+
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12 -mrtm -Wno-override-module -I ../../STAMP-include/lib sequencer.c -S -emit-llvm -o ../bin/sequencer.ll
+cat ../bin/sequencer.ll \
+| sed 's/tail \(call void @exit(\)/\1/g' \
+| sed 's/call void @exit(/call void @profiler_print_stats()\n  &/g' \
+| sed 's/declare void @exit(/declare void @profiler_print_stats()\n&/g' \
+> ../bin/sequencer.stats.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-genome \
+-o ../bin/sequencer.marked.ll ../bin/sequencer.stats.ll; \
+
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12 -mrtm -Wno-override-module -I ../../STAMP-include/lib table.c -S -emit-llvm -o ../bin/table.ll
+cat ../bin/table.ll \
+| sed 's/tail \(call void @exit(\)/\1/g' \
+| sed 's/call void @exit(/call void @profiler_print_stats()\n  &/g' \
+| sed 's/declare void @exit(/declare void @profiler_print_stats()\n&/g' \
+> ../bin/table.stats.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-genome \
+-o ../bin/table.marked.ll ../bin/table.stats.ll; \
+
+make ../bin/STAMP-genome.original ../bin/STAMP-genome.tm-arg ../bin/STAMP-genome.tm-gran1.tm-indir1.tm-dae
+make[1]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-genome/src'
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang++  -mrtm -Wno-override-module -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12 -mrtm -Wno-override-module ../bin/gene.ll ../bin/genome.ll ../bin/segments.ll ../bin/sequencer.ll ../bin/table.ll ../../STAMP-include/gem5/m5op_x86.o ../../STAMP-include/gem5/m5ops_wrapper.o ../../STAMP-include/perf/perf_counters.o  -static ../../STAMP-include/lib/bitmap.ll ../../STAMP-include/lib/hash.ll ../../STAMP-include/lib/hashtable.ll ../../STAMP-include/lib/pair.ll ../../STAMP-include/lib/random.ll ../../STAMP-include/lib/list.ll ../../STAMP-include/lib/mt19937ar.ll ../../STAMP-include/lib/thread.ll ../../STAMP-include/lib/vector.ll ../../STAMP-include/lib/memory.ll -L /home/derumigny/daedal/compiler/build/projects-build/lib -o ../bin/STAMP-genome.original
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/gene.ll -o ../bin/gene.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/genome.ll -o ../bin/genome.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/segments.ll -o ../bin/segments.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/sequencer.ll -o ../bin/sequencer.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/table.ll -o ../bin/table.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/llvm-link -S -o ../bin/STAMP-genome.tm-arg.ll ../bin/gene.O3.ll ../bin/genome.O3.ll ../bin/segments.O3.ll ../bin/sequencer.O3.ll ../bin/table.O3.ll ../../STAMP-include/lib/bitmap.ll ../../STAMP-include/lib/hash.ll ../../STAMP-include/lib/hashtable.ll ../../STAMP-include/lib/pair.ll ../../STAMP-include/lib/random.ll ../../STAMP-include/lib/list.ll ../../STAMP-include/lib/mt19937ar.ll ../../STAMP-include/lib/thread.ll ../../STAMP-include/lib/vector.ll ../../STAMP-include/lib/memory.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMArgsPrefetcher.so -tm-prefetch-args -o ../bin/STAMP-genome.tm-arg.O3.ll ../bin/STAMP-genome.tm-arg.ll
+
+TMArgPrefetcher: sequencer_run: Instructions for calls: 1
+TMArgPrefetcher: sequencer_run: Instructions for calls: 7
+TMArgPrefetcher: sequencer_run: Instructions for calls: 3
+TMArgPrefetcher: sequencer_run: Instructions for calls: 1
+TMArgPrefetcher: sequencer_run: Instructions for calls: 10
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang++  -mrtm -Wno-override-module -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12 -mrtm -Wno-override-module ../bin/STAMP-genome.tm-arg.O3.ll ../../STAMP-include/gem5/m5op_x86.o ../../STAMP-include/gem5/m5ops_wrapper.o ../../STAMP-include/perf/perf_counters.o  -static /home/derumigny/daedal/compiler/build/projects-build/lib/libDAE_prof_ST.a -lcpufreq -o ../bin/STAMP-genome.tm-arg
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -loop-simplify -reg2mem -licm -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMLoopChunk.so \
+-tm-loop-chunk -bench-name STAMP-genome -mem2reg -o ../bin/genome.tm-gran.ll ../bin/genome.marked.ll
+#This step is actually useless are loop chunking is disable
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMLoopExtract.so \
+-aggregate-extracted-args -tm-loop-extract -is-dae -bench-name STAMP-genome -o ../bin/genome.tm-gran1.tm-extract.ll ../bin/genome.tm-gran.ll; \
+
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -loop-simplify -reg2mem -licm -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMLoopChunk.so \
+-tm-loop-chunk -bench-name STAMP-genome -mem2reg -o ../bin/sequencer.tm-gran.ll ../bin/sequencer.marked.ll
+#This step is actually useless are loop chunking is disable
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMLoopExtract.so \
+-aggregate-extracted-args -tm-loop-extract -is-dae -bench-name STAMP-genome -o ../bin/sequencer.tm-gran1.tm-extract.ll ../bin/sequencer.tm-gran.ll; \
+
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/gene.marked.ll -o ../bin/gene.marked.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/segments.marked.ll -o ../bin/segments.marked.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/table.marked.ll -o ../bin/table.marked.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/llvm-link -S -o ../bin/STAMP-genome.tm-gran1.tm-dae.ll ../bin/genome.tm-gran1.tm-extract.ll ../bin/sequencer.tm-gran1.tm-extract.ll ../bin/gene.marked.O3.ll ../bin/segments.marked.O3.ll ../bin/table.marked.O3.ll ../../STAMP-include/lib/bitmap.ll ../../STAMP-include/lib/hash.ll ../../STAMP-include/lib/hashtable.ll ../../STAMP-include/lib/pair.ll ../../STAMP-include/lib/random.ll ../../STAMP-include/lib/list.ll ../../STAMP-include/lib/mt19937ar.ll ../../STAMP-include/lib/thread.ll ../../STAMP-include/lib/vector.ll ../../STAMP-include/lib/memory.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMFKernelPrefetch.so \
+-tbaa -basicaa -tm-f-kernel-prefetch \
+        -indir-thresh 1 -follow-partial \
+-always-inline -load /home/derumigny/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/STAMP-genome.tm-gran1.tm-indir1.tm-dae.O3.ll ../bin/STAMP-genome.tm-gran1.tm-dae.ll
+
+TMFKernelPrefetch: sequencer_run___kernel__sequencer_run1:
+TMFKernelPrefetch: (BadDeps: 0, Indir: 0)
+TMFKernelPrefetch: Indir: 1, 4 load(s) in access phase.
+TMFKernelPrefetch: 1 Corresponding TM_BEGIN()
+TMFKernelPrefetch: Prefetches: Inserted: 4/4  (Bad: 0  Indir: 0  Red: 0)
+TMFKernelPrefetch: Loads already handled by TM-Arg, nothing is done...
+
+TMFKernelPrefetch: sequencer_run___kernel__sequencer_run0:
+TMFKernelPrefetch: (BadDeps: 0, Indir: 0)
+TMFKernelPrefetch: Indir: 1, 4 load(s) in access phase.
+TMFKernelPrefetch: 1 Corresponding TM_BEGIN()
+TMFKernelPrefetch: Prefetches: Inserted: 3/3  (Bad: 0  Indir: 0  Red: 0)
+TMFKernelPrefetch: Loads already handled by TM-Arg, nothing is done...
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -loop-simplify -reg2mem -licm -load /home/derumigny/daedal/compiler/build/projects-build/lib/libLoopChunk.so \
+-loop-chunk -bench-name STAMP-genome -mem2reg -o ../bin/sequencer.gran.ll ../bin/sequencer.marked.ll
+touch ../bin/DAE-header.ll
+touch Globals.ll
+mv Globals.ll ../bin
+cat ../bin/DAE-header.ll ../bin/Globals.ll |  sed 's/\(_granularity.* \)[0-9]\+/\1'"1"'/g' > ../bin/STAMP-genome.tm-gran1.tm-indir1.tm-dae.GV_DAE.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang++  -mrtm -Wno-override-module -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12 -mrtm -Wno-override-module ../bin/STAMP-genome.tm-gran1.tm-indir1.tm-dae.O3.ll ../bin/STAMP-genome.tm-gran1.tm-indir1.tm-dae.GV_DAE.ll ../../STAMP-include/gem5/m5op_x86.o ../../STAMP-include/gem5/m5ops_wrapper.o ../../STAMP-include/perf/perf_counters.o  -static /home/derumigny/daedal/compiler/build/projects-build/lib/libDAE_prof_ST.a -lcpufreq -o ../bin/STAMP-genome.tm-gran1.tm-indir1.tm-dae
+make[1]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-genome/src'

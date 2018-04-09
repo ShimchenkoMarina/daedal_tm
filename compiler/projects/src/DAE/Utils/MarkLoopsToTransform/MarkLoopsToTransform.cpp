@@ -22,7 +22,7 @@
 
 #include "../../../DAE/Utils/SkelUtils/Utils.cpp"
 
-#define KERNEL_MARKING "__kernel__"
+#define KERNEL_MARKING "__kernel__tm__"
 
 using namespace llvm;
 
@@ -55,11 +55,32 @@ private:
 }
 
 bool MarkLoopsToTransform::runOnFunction(Function &F) {
-  DominatorTree &DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
-  LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
-  std::vector<Loop *> Loops(LI.begin(), LI.end());
+	//Mark loop only if this loop is inside TX
+	bool txDetected = false;
+	for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I)
+	{
+		if (auto *CI = dyn_cast<CallInst>(&*I))
+		{
+			Function *fun = CI->getCalledFunction();
+			if(fun)
+			{
+				if (fun->getName() == "fakeCallBegin")
+				{
+					txDetected = true;
+					break;
+				}
+			}
+		}
+	}
+	if(txDetected)
+	{
+  		DominatorTree &DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
+  		LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
+  		std::vector<Loop *> Loops(LI.begin(), LI.end());
 
-  return markLoops(Loops, DT);
+  		return markLoops(Loops, DT);
+	}
+	return false;
 }
 
 bool MarkLoopsToTransform::markLoops(std::vector<Loop *> Loops,

@@ -25,7 +25,7 @@
 
 #include <fstream>
 
-#define F_KERNEL_SUBSTR "__kernel__"
+#define F_KERNEL_SUBSTR "__kernel__tm__"
 #define PROLOGUE_SUBSTR "prol"
 
 using namespace llvm;
@@ -69,13 +69,21 @@ static RegisterPass<LoopExtract>
 
 bool LoopExtract::runOnLoop(Loop *L, LPPassManager &LPM) {
   // if already extracted
-  Function *F = L->getHeader()->getParent();
+  //Function *F = L->getHeader()->getParent();
 
   // find the chunked loops
+  //TODO: TM doesn't need chunks, because we assume 
+  //that amount of operations inside TM can't be big enough.
+  //We should check it up.
   if (IsDae) {
     // parent loop has to be marked
-    bool isMarked = L->getParentLoop() &&
-      L->getParentLoop()->getHeader()->getName().str().find(F_KERNEL_SUBSTR) != string::npos;
+    //TODO: don't see any reason right now why parent loop should be marked
+    //Agree that loop by itself should be marked and it should be inside appropriate BB
+    //I'm curious whether I should mark Tx BB
+    //bool isMarked = L->getParentLoop() &&
+    //  L->getParentLoop()->getHeader()->getName().str().find(F_KERNEL_SUBSTR) != string::npos;
+    bool isMarked = L->getHeader()->getName().str().find(F_KERNEL_SUBSTR) != string::npos &&
+	L->getHeader()->getParent()->getName().str().find(F_KERNEL_SUBSTR) == string::npos;
     if (!isMarked) {
       return false;
     }

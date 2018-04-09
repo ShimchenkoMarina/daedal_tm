@@ -1,0 +1,13 @@
+make: make -f Makefile
+collect_binaries.sh: run after make to put all binaries in bin directory.
+
+
+NOT USED:
+test_RTM
+run.sh: TODO: may be I should write a script to do following steps automatically.
+	Theoretically it run tests and then parse results.
+	In my case, 
+		1. I run it using command: "./do_test > raw_results"
+		2. Copy it to windows machine. All information is in README file in Downloads/Results/ folder.
+		3. run parse_raw_results.py on windows
+		4. take a graph in plotly account.

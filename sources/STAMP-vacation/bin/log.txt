@@ -1,0 +1,111 @@
+make[1]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-vacation/src'
+make PERF_TOOL= -C ../../STAMP-include/perf
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make -f Makefile.empty
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make -C ../../STAMP-include
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include'
+make -C lib 
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/lib'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/lib'
+make -C gem5 
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/gem5'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/gem5'
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include'
+make ../bin/STAMP-vacation.original.V3
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-vacation/src'
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib client.c -S -emit-llvm -o ../bin/client.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-vacation \
+	-o ../bin/client.marked.ll ../bin/client.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-vacation -mem2reg -o ../bin/client.extracted.ll ../bin/client.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/client.dae.V3.ll ../bin/client.extracted.ll
+
+FKernelPrefetch: client_run___kernel__tm__client_run0:
+FKernelPrefetch: Max indirs: 25
+Load is detected   %loadgep_ = load i64*, i64** %gep_
+Prefetch is done
+Load is detected   %loadgep_2 = load i64*, i64** %gep_1
+Prefetch is done
+Load is detected   %loadgep_4 = load i64*, i64** %gep_3
+Prefetch is done
+Load is detected   %loadgep_6 = load i64*, i64** %gep_5
+Prefetch is done
+Load is detected   %loadgep_8 = load %struct.manager*, %struct.manager** %gep_7
+Prefetch is done
+Load is detected   %loadgep_10 = load i64, i64* %gep_9
+Prefetch is done
+Load is detected   %9 = load i64, i64* %7, align 8, !tbaa !1
+Prefetch is done
+Load is detected   %12 = load i64, i64* %10, align 8, !tbaa !1
+Prefetch is done
+Load is detected   %15 = load i64, i64* %13, align 8, !tbaa !1
+Prefetch is done
+Load is detected   %20 = load i64, i64* %18, align 8, !tbaa !1FKernelPrefetch: Prefetches: Inserted: 10/10  (Bad: 0  Indir: 0  Red: 4)
+
+FKernelPrefetch: client_run___kernel__tm__client_run1:
+FKernelPrefetch: Max indirs: 25
+FKernelPrefetch:  !call   %9 = tail call i64 @manager_queryRoomPrice(%struct.manager* %loadgep_4, i64 %4) #7!>
+FKernelPrefetch: Disqualified: CFG error
+
+Prefetch is done
+Gde bly eta function
+Found call function
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib customer.c -S -emit-llvm -o ../bin/customer.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-vacation \
+	-o ../bin/customer.marked.ll ../bin/customer.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-vacation -mem2reg -o ../bin/customer.extracted.ll ../bin/customer.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/customer.dae.V3.ll ../bin/customer.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib manager.c -S -emit-llvm -o ../bin/manager.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-vacation \
+	-o ../bin/manager.marked.ll ../bin/manager.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-vacation -mem2reg -o ../bin/manager.extracted.ll ../bin/manager.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/manager.dae.V3.ll ../bin/manager.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib reservation.c -S -emit-llvm -o ../bin/reservation.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-vacation \
+	-o ../bin/reservation.marked.ll ../bin/reservation.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-vacation -mem2reg -o ../bin/reservation.extracted.ll ../bin/reservation.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/reservation.dae.V3.ll ../bin/reservation.extracted.ll
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DMAP_USE_RBTREE  -mrtm -Wno-override-module -I ../../STAMP-include/lib vacation.c -S -emit-llvm -o ../bin/vacation.V3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name STAMP-vacation \
+	-o ../bin/vacation.marked.ll ../bin/vacation.V3.ll; 
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -loop-simplify  -licm \
+	-load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name STAMP-vacation -mem2reg -o ../bin/vacation.extracted.ll ../bin/vacation.marked.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -S -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/vacation.dae.V3.ll ../bin/vacation.extracted.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//llvm-link -S -o ../bin/STAMP-vacation.dae.original.V3.ll ../bin/client.dae.V3.ll ../bin/customer.dae.V3.ll ../bin/manager.dae.V3.ll ../bin/reservation.dae.V3.ll ../bin/vacation.dae.V3.ll ../../STAMP-include/lib/list.O3.ll ../../STAMP-include/lib/pair.O3.ll ../../STAMP-include/lib/mt19937ar.O3.ll ../../STAMP-include/lib/random.O3.ll ../../STAMP-include/lib/rbtree.O3.ll ../../STAMP-include/lib/thread.O3.ll ../../STAMP-include/lib/memory.O3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang++ -O3   -mrtm -Wno-override-module -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DMAP_USE_RBTREE  -mrtm -Wno-override-module ../bin/STAMP-vacation.dae.original.V3.ll ../bin/STAMP-vacation.GV_DAE.ll ../../STAMP-include/gem5/m5op_x86.o ../../STAMP-include/gem5/m5ops_wrapper.o ../../STAMP-include/perf/perf_counters.o  -static /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libDAE_prof_ST.a -lcpufreq -o ../bin/STAMP-vacation.original.V3
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-vacation/src'
+make[1]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-vacation/src'

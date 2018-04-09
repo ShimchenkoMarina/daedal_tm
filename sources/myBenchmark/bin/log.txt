@@ -1,0 +1,129 @@
+make[1]: Entering directory `/home/mshimche/llvm/daedal/sources/myBenchmark/src'
+make PERF_TOOL= -C ../../STAMP-include/perf
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make -f Makefile.empty
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/perf'
+make -C ../../STAMP-include
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include'
+make -C lib 
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/lib'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/lib'
+make -C gem5 
+make[3]: Entering directory `/home/mshimche/llvm/daedal/sources/STAMP-include/gem5'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include/gem5'
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/STAMP-include'
+make ../bin/STAMP-myBenchmark.original.V2
+make[2]: Entering directory `/home/mshimche/llvm/daedal/sources/myBenchmark/src'
+mkdir -p ../bin/.
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang  -O3 -pthread -DHTM -DOLD_RTM_MACROSES  -mrtm -Wno-override-module -I ../../STAMP-include/lib small_benchmark.c -S -emit-llvm -o ../bin/small_benchmark.V2.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -O3 ../bin/small_benchmark.V2.ll -S -o ../bin/small_benchmark.opt.V2.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//opt -stats -load /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libTM_pass.so -tm_pass ../bin/small_benchmark.opt.V2.ll -S -o ../bin/small_benchmark.pass.opt.V2.ll
+TxBegin
+DUMA: fakeCallBegin
+Loop: YES
+DUMA: RTM_fallback_isLocked
+FUNCTION CALL:RTM_fallback_isLocked
+DUMA: RTM_fallback_lock
+FUNCTION CALL:RTM_fallback_lock
+DUMA: do_smth_with_ptr
+FUNCTION CALL:do_smth_with_ptr
+DUMA: puts
+FUNCTION CALL:puts
+DUMA: RTM_fallback_unlock
+FUNCTION CALL:RTM_fallback_unlock
+DUMA: RTM_fallback_isLocked
+FUNCTION CALL:RTM_fallback_isLocked
+DUMA: llvm.x86.sse2.pause
+FUNCTION CALL:llvm.x86.sse2.pause
+DUMA: RTM_fallback_isLocked
+FUNCTION CALL:RTM_fallback_isLocked
+LOAD is detected:   %20 = load i32, i32* getelementptr inbounds (%struct.global_distance, %struct.global_distance* @d, i64 0, i32 0), align 8, !tbaa !3
+GLOBAL: NO
+Loop: NO
+LOAD is detected:   %23 = load i32*, i32** getelementptr inbounds (%struct.global_distance, %struct.global_distance* @d, i64 0, i32 1), align 8, !tbaa !9
+GLOBAL: NO
+Loop: NO
+LOAD is detected:   %25 = load i32, i32* %24, align 4, !tbaa !10
+GLOBAL: MAY/MUST
+Loop: NO
+Prefetched: NO
+Dependancy: YES
+LOAD is detected:   %26 = load i32, i32* %1, align 4, !tbaa !10
+GLOBAL: MAY/MUST
+Loop: NO
+Prefetched: NO
+Dependancy: NO
+Prefetch is done
+LOAD is detected:   %1 = load i32, i32* %ptr1, align 4, !tbaa !1
+GLOBAL: NO (function arg)
+Loop: NO
+LOAD is detected:   %2 = load i32, i32* @G2, align 4, !tbaa !1
+GLOBAL: YES (direct)
+Loop: NO
+Prefetched: NO
+Dependancy: NO
+Prefetch is done
+LOAD is detected:   %5 = load i32, i32* @G2, align 4, !tbaa !1
+GLOBAL: YES (direct)
+Loop: NO
+Prefetched: Yes
+LOAD is detected:   %41 = load i32, i32* %1, align 4, !tbaa !10
+GLOBAL: MAY/MUST
+Loop: NO
+Prefetched: Yes
+LOAD is detected:   %43 = load i32, i32* @G1, align 4, !tbaa !10
+GLOBAL: YES (direct)
+Loop: NO
+Prefetched: NO
+Dependancy: NO
+Prefetch is done
+LOAD is detected:   %46 = load i32, i32* %1, align 4, !tbaa !10
+GLOBAL: MAY/MUST
+Loop: NO
+Prefetched: Yes
+LOAD is detected:   %48 = load i32, i32* @G1, align 4, !tbaa !10
+GLOBAL: YES (direct)
+Loop: NO
+Prefetched: Yes
+LOAD is detected:   %53 = load i32, i32* %1, align 4, !tbaa !10
+GLOBAL: MAY/MUST
+Loop: YES
+LOAD is detected:   %55 = load i32, i32* @G1, align 4, !tbaa !10
+GLOBAL: YES (direct)
+Loop: YES
+LOAD is detected:   %57 = load i32, i32* %1, align 4, !tbaa !10
+GLOBAL: MAY/MUST
+Loop: YES
+LOAD is detected:   %59 = load i32, i32* @G1, align 4, !tbaa !10
+GLOBAL: YES (direct)
+Loop: YES
+LOAD is detected:   %61 = load i32, i32* %1, align 4, !tbaa !10
+GLOBAL: MAY/MUST
+Loop: YES
+LOAD is detected:   %63 = load i32, i32* @G1, align 4, !tbaa !10
+GLOBAL: YES (direct)
+Loop: YES
+LOAD is detected:   %65 = load i32, i32* %1, align 4, !tbaa !10
+GLOBAL: MAY/MUST
+Loop: YES
+LOAD is detected:   %67 = load i32, i32* @G1, align 4, !tbaa !10
+GLOBAL: YES (direct)
+Loop: YES
+LOAD is detected:   %33 = load i32, i32* %1, align 4, !tbaa !10
+GLOBAL: MAY/MUST
+Loop: NO
+Prefetched: Yes
+LOAD is detected:   %35 = load i32, i32* @G1, align 4, !tbaa !10
+GLOBAL: YES (direct)
+Loop: NO
+Prefetched: Yes
+TxEnd
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//llvm-link -S -o ../bin/STAMP-myBenchmark.pass.original.V2.ll ../bin/small_benchmark.pass.opt.V2.ll ../../STAMP-include/lib/mt19937ar.O3.ll ../../STAMP-include/lib/thread.O3.ll ../../STAMP-include/lib/vector.O3.ll ../../STAMP-include/lib/memory.O3.ll
+/home/mshimche/llvm/daedal/compiler/build/llvm-build/bin//clang++ -O3   -mrtm -Wno-override-module -pthread -DHTM -DOLD_RTM_MACROSES  -mrtm -Wno-override-module ../bin/STAMP-myBenchmark.pass.original.V2.ll ../../STAMP-include/gem5/m5op_x86.o ../../STAMP-include/gem5/m5ops_wrapper.o ../../STAMP-include/perf/perf_counters.o  -static /home/mshimche/llvm/daedal/compiler/build/projects-build/lib/libDAE_prof_ST.a -lcpufreq -o ../bin/STAMP-myBenchmark.original.V2
+make[2]: Leaving directory `/home/mshimche/llvm/daedal/sources/myBenchmark/src'
+make[1]: Leaving directory `/home/mshimche/llvm/daedal/sources/myBenchmark/src'

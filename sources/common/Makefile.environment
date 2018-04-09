@@ -4,5 +4,8 @@
 # Setting the environment variables 
 #
 
-COMPILER_LIB=$(HOME)/daedal/compiler/build/projects-build/lib
-LLVM_BIN=$(HOME)/daedal/compiler/build/llvm-build/bin/
+COMPILER_LIB=$(HOME)/llvm/daedal/compiler/build/projects-build/lib
+LLVM_BIN=$(HOME)/llvm/daedal/compiler/build/llvm-build/bin/
+PASS_DIR=$(HOME)/llvm/daedal/compiler/build/projects-build/lib
+PASS_NAME=libTM_pass.so
+PASS_FLAGS := -tm_pass

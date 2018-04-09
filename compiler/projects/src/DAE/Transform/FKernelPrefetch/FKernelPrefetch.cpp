@@ -44,7 +44,7 @@
 #define LIBRARYNAME "FKernelPrefetch"
 #define PRINTSTREAM errs() // raw_ostream
 
-#define F_KERNEL_SUBSTR "__kernel__"
+#define F_KERNEL_SUBSTR "__kernel__tm__"
 #define CLONE_SUFFIX "_clone"
 
 using namespace llvm;
@@ -121,6 +121,8 @@ public:
             // - No inlining of the A phase.
             access->removeFnAttr(Attribute::AlwaysInline);
             access->addFnAttr(Attribute::NoInline);
+            execute->removeFnAttr(Attribute::AlwaysInline);
+            execute->addFnAttr(Attribute::NoInline);
             // Following instructions asssumes that the first
             // operand is the original and the second the clone.
             insertCallToAccessFunctionSequential(access, execute);
@@ -597,13 +599,14 @@ protected:
 
     // Insert prefetch
     IRBuilder<> Builder(InsertPoint);
+    outs() << "Load is detected " << *LInst << "\n";
     Module *M = LInst->getParent()->getParent()->getParent();
     Type *I32 = Type::getInt32Ty(LInst->getContext());
     Value *PrefFun = Intrinsic::getDeclaration(M, Intrinsic::prefetch);
     CallInst *Prefetch = Builder.CreateCall(
         PrefFun, {Cast, ConstantInt::get(I32, 0),                       // read
                   ConstantInt::get(I32, 3), ConstantInt::get(I32, 1)}); // data
-
+    outs() << "Prefetch is done\n";
     // Inset prefetch instructions into book keeping
     toKeep.insert(Cast);
     toKeep.insert(Prefetch);

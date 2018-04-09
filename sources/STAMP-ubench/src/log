@@ -1,0 +1,75 @@
+make PERF_TOOL= -C ../../STAMP-include/perf
+make[1]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include/perf'
+make -f Makefile.empty
+make[2]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include/perf'
+gcc -O3 -Wall -I../gem5  -O3 -Wall -c perf_counters.c -o perf_counters.o
+make[2]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include/perf'
+make[1]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include/perf'
+make -C ../../STAMP-include
+make[1]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include'
+make -C lib 
+make[2]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include/lib'
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 avltree.c -S -emit-llvm -o avltree.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 bitmap.c -S -emit-llvm -o bitmap.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 hash.c -S -emit-llvm -o hash.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 hashtable.c -S -emit-llvm -o hashtable.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 heap.c -S -emit-llvm -o heap.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 list.c -S -emit-llvm -o list.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 memory.c -S -emit-llvm -o memory.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 mt19937ar.c -S -emit-llvm -o mt19937ar.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 pair.c -S -emit-llvm -o pair.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 queue.c -S -emit-llvm -o queue.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 random.c -S -emit-llvm -o random.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 rbtree.c -S -emit-llvm -o rbtree.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 thread.c -S -emit-llvm -o thread.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 vector.c -S -emit-llvm -o vector.O3.ll
+make[2]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include/lib'
+make -C gem5 
+make[2]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include/gem5'
+gcc  -O2 -DM5OP_ADDR=0xFFFF0000 -pthread -fno-leading-underscore -I/benchmarks/libs/xaction/ -o m5.o -c m5.c
+gcc -O2 -DM5OP_ADDR=0xFFFF0000 -pthread -fno-leading-underscore -I/benchmarks/libs/xaction/ -o m5op_x86.o -c m5op_x86.S
+gcc  -O2 -DM5OP_ADDR=0xFFFF0000 -pthread -fno-leading-underscore -I/benchmarks/libs/xaction/ -o m5ops_wrapper.o -c m5ops_wrapper.c
+gcc -o m5 m5.o m5op_x86.o m5ops_wrapper.o -lpthread
+make[2]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include/gem5'
+make[1]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include'
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -O3 -mrtm -Wno-override-module -I ../../STAMP-include/lib worker.c -S -emit-llvm -o ../bin/worker.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/worker.ll -o ../bin/worker.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-ubench \
+-o ../bin/worker.marked.ll ../bin/worker.O3.ll; \
+
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -O3 -mrtm -Wno-override-module -I ../../STAMP-include/lib ubench.c -S -emit-llvm -o ../bin/ubench.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/ubench.ll -o ../bin/ubench.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-ubench \
+-o ../bin/ubench.marked.ll ../bin/ubench.O3.ll; \
+
+make ../bin/STAMP-ubench.tm-gran1.tm-indir25.tm-dae
+make[1]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-ubench/src'
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -loop-simplify -reg2mem -licm -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMLoopChunk.so \
+-tm-loop-chunk -bench-name STAMP-ubench -mem2reg -o ../bin/ubench.tm-gran.ll ../bin/ubench.marked.ll
+#This step is actually useless are loop chunking is disable
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMLoopExtract.so \
+-aggregate-extracted-args -tm-loop-extract -is-dae -bench-name STAMP-ubench -o ../bin/ubench.tm-gran1.tm-extract.ll ../bin/ubench.tm-gran.ll; \
+
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -loop-simplify -reg2mem -licm -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMLoopChunk.so \
+-tm-loop-chunk -bench-name STAMP-ubench -mem2reg -o ../bin/worker.tm-gran.ll ../bin/worker.marked.ll
+#This step is actually useless are loop chunking is disable
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMLoopExtract.so \
+-aggregate-extracted-args -tm-loop-extract -is-dae -bench-name STAMP-ubench -o ../bin/worker.tm-gran1.tm-extract.ll ../bin/worker.tm-gran.ll; \
+
+/home/derumigny/daedal/compiler/build/llvm-build/bin/llvm-link -S -o ../bin/STAMP-ubench.tm-gran1.tm-dae.ll ../bin/ubench.tm-gran1.tm-extract.ll ../bin/worker.tm-gran1.tm-extract.ll ../../STAMP-include/lib/mt19937ar.O3.ll ../../STAMP-include/lib/random.O3.ll ../../STAMP-include/lib/thread.O3.ll ../../STAMP-include/lib/vector.O3.ll ../../STAMP-include/lib/memory.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMFKernelPrefetch.so \
+-tbaa -basicaa -tm-f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+-always-inline -load /home/derumigny/daedal/compiler/build/projects-build/lib/libRemoveRedundantPref.so -rrp -o ../bin/STAMP-ubench.tm-gran1.tm-indir25.tm-dae.O3.ll ../bin/STAMP-ubench.tm-gran1.tm-dae.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -loop-simplify -reg2mem -licm -load /home/derumigny/daedal/compiler/build/projects-build/lib/libLoopChunk.so \
+-loop-chunk -bench-name STAMP-ubench -mem2reg -o ../bin/worker.gran.ll ../bin/worker.marked.ll
+touch ../bin/DAE-header.ll
+touch Globals.ll
+mv Globals.ll ../bin
+cat ../bin/DAE-header.ll ../bin/Globals.ll |  sed 's/\(_granularity.* \)[0-9]\+/\1'"1"'/g' > ../bin/STAMP-ubench.tm-gran1.tm-indir25.tm-dae.GV_DAE.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang++  -O3 -mrtm -Wno-override-module -pthread -DHTM -DOLD_RTM_MACROSES -O3 -mrtm -Wno-override-module ../bin/STAMP-ubench.tm-gran1.tm-indir25.tm-dae.O3.ll ../bin/STAMP-ubench.tm-gran1.tm-indir25.tm-dae.GV_DAE.ll ../../STAMP-include/gem5/m5op_x86.o ../../STAMP-include/gem5/m5ops_wrapper.o ../../STAMP-include/perf/perf_counters.o  -static /home/derumigny/daedal/compiler/build/projects-build/lib/libDAE_prof_ST.a -lcpufreq -o ../bin/STAMP-ubench.tm-gran1.tm-indir25.tm-dae
+make[1]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-ubench/src'

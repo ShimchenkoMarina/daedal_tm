@@ -134,25 +134,49 @@ void insertCallToAccessFunction(Function *F, Function *cF) {
 }
 
 void insertCallToAccessFunctionSequential(Function *F, Function *cF) {
-  CallInst *I;
-  BasicBlock *b;
+	outs() << "Gde bly eta function\n";
+  	CallInst *I;
+  	BasicBlock *BB;
+	Instruction * insert_point;
 
-  Value::user_iterator i = F->user_begin(), e = F->user_end();
-  while (i != e) {
-    if (isa<CallInst>(*i)) {
+  	Value::user_iterator i = F->user_begin(), e = F->user_end();
+  	while (i != e) {
+    	if (isa<CallInst>(*i)) {
+		outs() << "Found call function\n";
 
-      I = dyn_cast<CallInst>(*i);
-      b = I->getParent();
-      BasicBlock::iterator helper(I);
-      CallInst *ci = dyn_cast<CallInst>(I->clone());
-      ci->setCalledFunction(cF);
-      b->getInstList().insertAfter(helper, ci);
+      		I = dyn_cast<CallInst>(*i);
+      		CallInst *ci = dyn_cast<CallInst>(I->clone());
+		I->setCalledFunction(cF);
+      		i++;
+		Function *fun = I->getParent()->getParent();
+		for (inst_iterator it = inst_begin(fun), e = inst_end(fun); it != e; ++it)
+		{
+			if(CallInst *CI = dyn_cast<CallInst>(&*it))
+			{
+				Function *fun = CI->getCalledFunction();
+				if(fun)
+				{
+					if(fun->getName() == "fakeCallBegin")
+					{
+						insert_point = &*it;
+						ci->insertBefore(insert_point);
+						break;
+					}
+				}
+			}
+		}
 
-      i++;
-      I->replaceAllUsesWith(ci);
+		//Original DAE version
+      		//b = I->getParent();
+      		//BasicBlock::iterator helper(I);
+      		//CallInst *ci = dyn_cast<CallInst>(I->clone());
+      		//ci->setCalledFunction(cF);
+      		//b->getInstList().insertAfter(helper, ci);
+      		//CallInst *ci = dyn_cast<CallInst>(I->clone());
+      		//I->replaceAllUsesWith(ci);
 
-      insertCallToPAPI(I, ci);
-    }
+      		//insertCallToPAPI(I, ci);
+    	}else ++i;
   }
 }
 

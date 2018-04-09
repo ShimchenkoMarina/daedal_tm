@@ -11,9 +11,17 @@ include $(LEVEL)/common/Makefile.environment
 #
 
 # LLVM tools
+LINK=$(LLVM_BIN)/llvm-link
 OPT=$(LLVM_BIN)/opt
+LLC=$(LLVM_BIN)/llc
 CLANG=$(LLVM_BIN)/clang 
 CLANGCPP=$(LLVM_BIN)/clang++
+# -O3 deliberately not added to CFLAGS in order to generate unoptimized .ll files
+CFLAGS += 
+CFLAGS += -mrtm -Wno-override-module
+# Enable optimizations in the final step -O3
+CXXFLAGS += 
+CXXFLAGS += -mrtm -Wno-override-module
 
 DVFS_FLAGS=$(COMPILER_LIB)/libDAE_prof_ST.a -lcpufreq
 
@@ -24,100 +32,189 @@ DAE_MARKER='__kernel__'
 # Helper definitions
 #
 
-# Retrieving information from target file name
-get_gran=$(shell echo $@ | sed -n 's/.*\.gran\([0-9]*\)\..*/\1/p')
-get_indir=$(shell echo $@ | sed -n 's/.*\.indir\([0-9]*\)\..*/\1/p')
-
 # Helper to generate prerequisites of rules
-get_dae_prerequisites=$$(shell echo $$@ | sed 's/indir.*/extract.ll/g')
-get_marked=$$(addprefix $(BINDIR)/, $$(addsuffix .marked.ll,$$(basename $$(SRCS))))
-get_objects=$$(addprefix $(BINDIR)/, $$(addsuffix .ll, $$(basename $$(SRCS))))
-get_gran_files=$$(shell grep -l "__kernel__" $(BINDIR)/*.marked.ll | sed 's/.marked.ll/.gran.ll/g')
-get_kernel_marked_files=$$(shell grep -l "__kernel__\|main" $(BINDIR)/*.marked.ll | sed 's/.marked.ll/.$$*.O3.ll/g')
-get_unmodified_files=$$(shell grep -l -L '__kernel__\|main' $(BINDIR)/*.marked.ll | sed 's/.marked/.marked.O3/g')
+get_O0_objects=$$(addprefix $(BINDIR)/, $$(addsuffix .V0.ll, $$(basename $$(SRCS))))
+get_O1_objects=$$(addprefix $(BINDIR)/, $$(addsuffix .$(OPT_SUFFIX).V1.ll, $$(basename $$(SRCS))))
+get_O2_objects=$$(addprefix $(BINDIR)/, $$(addsuffix .$(PASS_SUFFIX).$(OPT_SUFFIX).V2.ll, $$(basename $$(SRCS))))
+get_marked_files=$$(shell grep -sl "__kernel__" $(BINDIR)/*.marked.ll)
+get_O3_objects=$$(addprefix $(BINDIR)/, $$(addsuffix .$(DAE_SUFFIX).V3.ll, $$(basename $$(SRCS))))
+get_O4_objects=$$(addprefix $(BINDIR)/, $$(addsuffix .$(DAE_SUFFIX).V4.ll, $$(basename $$(SRCS))))
 
 # Debugging purposes: keep all generated ll files
 .PRECIOUS: %.ll
-.PHONY: $(get_gran_files)
+.PHONY: $(get_marked_files)
 .SECONDARY:
 
 .SECONDEXPANSION:
 
 # Create marked files first (marked whether to decouple or not), then
 # evaluate how to build the targets
-all: $(get_marked)
-
+all: perf libs
 	$(MAKE) $(TARGETS)
 
-# Main makefile rules
-#
-$(BINDIR)/%.$(ORIGINAL_SUFFIX): $(get_objects)
-	$(CLANGCPP) $(CXXFLAGS) $(CFLAGS) $^ $(LDFLAGS) -L $(COMPILER_LIB) -o $@
+libs: $(SRCS_LIBS)
+ifdef SRCS_LIBS
+	$(MAKE) -C $(LIB_DIR)
+endif
 
-$(BINDIR)/$(BENCHMARK).%: $(get_unmodified_files) $(get_kernel_marked_files) $(BINDIR)/$(BENCHMARK).%.GV_DAE.ll
-	$(CLANGCPP) $(CXXFLAGS) $(CFLAGS) $^ $(LDFLAGS) $(DVFS_FLAGS) -o $@
+perf:
+	$(MAKE) PERF_TOOL=$(PERF_COUNTERS_TOOL) -C $(LIB_PERF)
 
-%.dae.ll: $(get_dae_prerequisites)
-	$(eval $@_INDIR:=$(get_indir))
-	$(OPT) -S -load $(COMPILER_LIB)/libFKernelPrefetch.so \
-	-tbaa -basicaa -f-kernel-prefetch \
-        -indir-thresh $($@_INDIR) -follow-partial \
-	-always-inline -O3 -load $(COMPILER_LIB)/libRemoveRedundantPref.so -rrp -o $@ $^
+#$(BINDIR)/$(BENCHMARK).$(GCC_SUFFIX).out: $(BINDIR)/$(BENCHMARK).out
+#	gcc -O3 $(CXXFLAGS) $(CFLAGS) $^ $(LIB_OBJS) $(LDFLAGS) $(DVFS_FLAGS) -o $@
 
-$(BINDIR)/DAE-header.ll: $(get_gran_files)
+$(BINDIR)/$(BENCHMARK).$(ORIGINAL_SUFFIX).V0: $(BINDIR)/$(BENCHMARK).$(ORIGINAL_SUFFIX).V0.ll
+	$(CLANGCPP) -O3 $(CXXFLAGS) $(CFLAGS) $^ $(LIB_OBJS) $(LDFLAGS) -o $@
+
+$(BINDIR)/$(BENCHMARK).$(ORIGINAL_SUFFIX).V1: $(BINDIR)/$(BENCHMARK).$(ORIGINAL_SUFFIX).V1.ll
+	$(CLANGCPP) -O3 $(CXXFLAGS) $(CFLAGS) $^ $(LIB_OBJS) $(LDFLAGS) $(DVFS_FLAGS) -o $@
+
+$(BINDIR)/$(BENCHMARK).$(ORIGINAL_SUFFIX).V2: $(BINDIR)/$(BENCHMARK).$(PASS_SUFFIX).$(ORIGINAL_SUFFIX).V2.ll
+	$(CLANGCPP) -O3 $(CXXFLAGS) $(CFLAGS) $^ $(LIB_OBJS) $(LDFLAGS) $(DVFS_FLAGS) -o $@
+
+$(BINDIR)/$(BENCHMARK).$(ORIGINAL_SUFFIX).V3: $(BINDIR)/$(BENCHMARK).$(DAE_SUFFIX).$(ORIGINAL_SUFFIX).V3.ll $(BINDIR)/$(BENCHMARK).GV_DAE.ll
+	$(CLANGCPP) -O3 $(CXXFLAGS) $(CFLAGS) $^ $(LIB_OBJS) $(LDFLAGS) $(DVFS_FLAGS) -o $@
+
+$(BINDIR)/$(BENCHMARK).$(ORIGINAL_SUFFIX).V4: $(BINDIR)/$(BENCHMARK).$(DAE_SUFFIX).$(ORIGINAL_SUFFIX).V4.ll $(BINDIR)/$(BENCHMARK).GV_DAE.ll
+	$(CLANGCPP) -O3 $(CXXFLAGS) $(CFLAGS) $^ $(LIB_OBJS) $(LDFLAGS) $(DVFS_FLAGS) -o $@
+
+# Printing stats introduces an overhead. For gathering performance
+# numbers, stats should be disabled to get the correct execution time
+# (fair for all versions).
+$(BINDIR)/$(BENCHMARK).$(ORIGINAL_SUFFIX).V0.ll: $(get_O0_objects) $(LIB_LLS)
+	$(LINK) -S -o $@ $^
+
+$(BINDIR)/$(BENCHMARK).$(ORIGINAL_SUFFIX).V1.ll: $(get_O1_objects) $(LIB_LLS)
+	$(LINK)  -S -o $@ $^
+
+$(BINDIR)/$(BENCHMARK).$(PASS_SUFFIX).$(ORIGINAL_SUFFIX).V2.ll: $(get_O2_objects) $(LIB_LLS)
+	$(LINK) -S -o $@ $^
+
+$(BINDIR)/$(BENCHMARK).$(DAE_SUFFIX).$(ORIGINAL_SUFFIX).V3.ll: $(get_O3_objects) $(LIB_LLS)
+	$(LINK) -S -o $@ $^
+
+$(BINDIR)/$(BENCHMARK).$(DAE_SUFFIX).$(ORIGINAL_SUFFIX).V4.ll: $(get_O4_objects) $(LIB_LLS)
+	$(LINK) -S -o $@ $^
+
+$(BINDIR)/$(BENCHMARK).out: $(get_gcc_objects) $(LIB_LLS)
+	gcc -o $@ $^
+
+
+$(BINDIR)/$(BENCHMARK).GV_DAE.ll: $(BINDIR)/DAE-header.ll $(BINDIR)/Globals.ll
+	cat $^ > $@
+
+$(BINDIR)/DAE-header.ll: $(get_marked_files)
+ifdef <
 	head -n 3 $< | tail -n -2 > $@
+else
+	touch $@
+endif
 
-%.GV_DAE.ll: $(BINDIR)/DAE-header.ll $(BINDIR)/Globals.ll
-	$(eval $@_GRAN:=$(get_gran))
-	cat $^ |  sed 's/\(_granularity.* \)[0-9]\+/\1'"${$@_GRAN}"'/g' > $@
-
-$(BINDIR)/Globals.ll: $(get_gran_files)
+$(BINDIR)/Globals.ll: $(get_marked_files)
+	touch Globals.ll
 	mv Globals.ll $(BINDIR)
-
 
 # General object rules
 #
-$(BINDIR)/%.ll: %.c
+#Related to gcc
+#$(BINDIR)/%.o: %.c
+#	mkdir -p $(BINDIR)/$(shell dirname $^)
+#	gcc -O3  -pthread -DHTM -DLIST_NO_DUPLICATES -DCHUNK_STEP1=12 -mrtm -Wno-override-module -I $(LIB_DIR)/lib $^  -o $@
+#related to V0 version
+#Simply converst .c to .ll with clang
+$(BINDIR)/%.V0.ll: %.c
 	mkdir -p $(BINDIR)/$(shell dirname $^)
-	$(CLANG) $(CFLAGS) $^ -S -emit-llvm -o $@
+	$(CLANG) -O3 $(CFLAGS) -I $(LIB_DIR)/lib $^ -S -emit-llvm -o $@
+#Related to V1 version
+#Two times -O3 optimizations
+$(BINDIR)/%.V1.ll: %.c
+	mkdir -p $(BINDIR)/$(shell dirname $^)
+	$(CLANG) -O3 $(CFLAGS) -I $(LIB_DIR)/lib $^ -S -emit-llvm -o $@
 
-$(BINDIR)/%.ll: %.cpp
-	mkdir -p $(BINDIR)/$(shell dirname $<)
-	$(CLANGCPP) $(CXXFLAGS) $^ -S -emit-llvm -o $@
+$(BINDIR)/%.$(OPT_SUFFIX).V1.ll: $(BINDIR)/%.V1.ll
+	$(OPT) -O3 $^ -S -o $@
 
-$(BINDIR)/%.ll: %.cc
-	mkdir -p $(BINDIR)/$(shell dirname $<)
-	$(CLANGCPP) $(CXXFLAGS)  $^ -S -emit-llvm -o $@
+#Related to V2 version
+#Two times -03 optimization + TM pass
+$(BINDIR)/%.V2.ll: %.c
+	mkdir -p $(BINDIR)/$(shell dirname $^)
+	$(CLANG) -O3 $(CFLAGS) -I $(LIB_DIR)/lib $^ -S -emit-llvm -o $@
 
-%.O3.ll: %.ll
-	$(OPT) -S -O3 $^ -o $@
+$(BINDIR)/%.$(OPT_SUFFIX).V2.ll: $(BINDIR)/%.V2.ll
+	$(OPT) -O3 $^ -S -o $@
 
-# DAE related rules
-#
-%.marked.ll: %.stats.ll
-	 $(OPT) -S -load $(COMPILER_LIB)/libMarkLoopsToTransform.so \
+$(BINDIR)/%.$(PASS_SUFFIX).$(OPT_SUFFIX).V2.ll: $(BINDIR)/%.$(OPT_SUFFIX).V2.ll
+	$(OPT) -stats -load $(PASS_DIR)/$(PASS_NAME) $(PASS_FLAGS) $^ -S -o $@
+
+#Related to V3 version
+#Two times -03 + DAE pass
+$(BINDIR)/%.V3.ll: %.c
+	mkdir -p $(BINDIR)/$(shell dirname $^)
+	$(CLANG) -O3 $(CFLAGS) -I $(LIB_DIR)/lib $^ -S -emit-llvm -o $@
+
+#$(BINDIR)/%.stats.ll: $(BINDIR)/%.V3.ll
+#	cat $< \
+#	| sed 's/tail \(call void @exit(\)/\1/g' \
+#	| sed 's/call void @exit(/call void @profiler_print_stats()\n  &/g' \
+#	| sed 's/declare void @exit(/declare void @profiler_print_stats()\n&/g' \
+#	> $@
+
+$(BINDIR)/%.marked.ll: $(BINDIR)/%.V3.ll
+	$(OPT) -S -load $(COMPILER_LIB)/libMarkLoopsToTransform.so \
 	-mark-loops -require-delinquent=false -bench-name $(BENCHMARK) \
-	-o $@ $<; \
+	-o $@ $<; 
 
-%.gran.ll: %.marked.ll
-	-$(OPT) -S -loop-simplify -reg2mem -licm -load $(COMPILER_LIB)/libLoopChunk.so \
-	-loop-chunk -bench-name $(BENCHMARK) -mem2reg -o $@ $<
+#$(BINDIR)/%.gran.ll: $(BINDIR)/%.marked.ll
+#	-$(OPT) -S -loop-simplify -reg2mem -licm -load $(COMPILER_LIB)/libLoopChunk.so \
+#	-loop-chunk -bench-name $(BENCHMARK) -mem2reg -o $@ $<
 
+$(BINDIR)/%.extracted.ll: $(BINDIR)/%.marked.ll
+	-$(OPT) -S -loop-simplify  -licm \
+	-load $(COMPILER_LIB)/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name $(BENCHMARK) -mem2reg -o $@ $<
 
-%.extract.ll: $$(shell echo $$@ | sed 's/.gran[0-9]\+.*/.gran.ll/g')
-	$(OPT) -S -load $(COMPILER_LIB)/libLoopExtract.so \
-	-aggregate-extracted-args -second-loop-extract -is-dae -bench-name $(BENCHMARK) -o $@ $<; \
+$(BINDIR)/%.$(DAE_SUFFIX).V3.ll : $(BINDIR)/%.extracted.ll
+	$(OPT) -S -load $(COMPILER_LIB)/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load $(COMPILER_LIB)/libRemoveRedundantPref.so -rrp -o $@ $^
 
+#Related to V4 version
+#TM_PASS + DAE
+$(BINDIR)/%.V4.ll: %.c
+	mkdir -p $(BINDIR)/$(shell dirname $^)
+	$(CLANG) -O3 $(CFLAGS) -I $(LIB_DIR)/lib $^ -S -emit-llvm -o $@
 
-%.stats.ll: %.ll
-	cat $< \
-	| sed 's/tail \(call void @exit(\)/\1/g' \
-	| sed 's/call void @exit(/call void @profiler_print_stats()\n  &/g' \
-	| sed 's/declare void @exit(/declare void @profiler_print_stats()\n&/g' \
-	> $@
+$(BINDIR)/%.$(OPT_SUFFIX).V4.ll: $(BINDIR)/%.V4.ll
+	$(OPT) -O3 $^ -S -o $@
 
-%.cae.ll: %.extract.ll
-	$(OPT) -S -load $(COMPILER_LIB)/libTimeOrig.so -papi-orig -always-inline -o $@ $<;
+$(BINDIR)/%.$(PASS_SUFFIX).$(OPT_SUFFIX).V4.ll: $(BINDIR)/%.$(OPT_SUFFIX).V4.ll
+	$(OPT) -stats -load $(PASS_DIR)/$(PASS_NAME) $(PASS_FLAGS) $^ -S -o $@
+
+#$(BINDIR)/%.stats.ll: $(BINDIR)/%.V3.ll
+#	cat $< \
+#	| sed 's/tail \(call void @exit(\)/\1/g' \
+#	| sed 's/call void @exit(/call void @profiler_print_stats()\n  &/g' \
+#	| sed 's/declare void @exit(/declare void @profiler_print_stats()\n&/g' \
+#	> $@
+
+$(BINDIR)/%.marked.V4.ll: $(BINDIR)/%.$(PASS_SUFFIX).$(OPT_SUFFIX).V4.ll
+	$(OPT) -S -load $(COMPILER_LIB)/libMarkLoopsToTransform.so \
+	-mark-loops -require-delinquent=false -bench-name $(BENCHMARK) \
+	-o $@ $<; 
+
+#$(BINDIR)/%.gran.ll: $(BINDIR)/%.marked.ll
+#	-$(OPT) -S -loop-simplify -reg2mem -licm -load $(COMPILER_LIB)/libLoopChunk.so \
+#	-loop-chunk -bench-name $(BENCHMARK) -mem2reg -o $@ $<
+
+$(BINDIR)/%.extracted.V4.ll: $(BINDIR)/%.marked.V4.ll
+	-$(OPT) -S -loop-simplify  -licm \
+	-load $(COMPILER_LIB)/libLoopExtract.so -aggregate-extracted-args -second-loop-extract -is-dae -bench-name $(BENCHMARK) -mem2reg -o $@ $<
+
+$(BINDIR)/%.$(DAE_SUFFIX).V4.ll : $(BINDIR)/%.extracted.V4.ll
+	$(OPT) -S -load $(COMPILER_LIB)/libFKernelPrefetch.so \
+	-tbaa -basicaa -f-kernel-prefetch \
+        -indir-thresh 25 -follow-partial \
+	-always-inline -O3 -load $(COMPILER_LIB)/libRemoveRedundantPref.so -rrp -o $@ $^
 
 clean:
-	rm -f $(BINDIR)/* 
+	rm -f *.o $(BINDIR)/* && $(MAKE) -C $(LIB_DIR) clean

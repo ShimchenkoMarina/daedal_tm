@@ -1,0 +1,39 @@
+####### (1) GENERATE source.marked.ll from each source.O3.ll:
+
+#### <worker.c>
+
+clang  -pthread -DHTM -DOLD_RTM_MACROSES -O3 -mrtm -Wno-override-module -I ../../STAMP-include/lib worker.c -S -emit-llvm -o ../bin/worker.ll
+opt -S -O3 ../bin/worker.ll -o ../bin/worker.O3.ll
+opt -S -load libMarkLoopsToTransform.so  -mark-loops -require-delinquent=false -bench-name STAMP-ubench -o ../bin/worker.marked.ll ../bin/worker.O3.ll; 
+
+#### <ubench.c>
+
+clang  -pthread -DHTM -DOLD_RTM_MACROSES -O3 -mrtm -Wno-override-module -I ../../STAMP-include/lib ubench.c -S -emit-llvm -o ../bin/ubench.ll
+opt -S -O3 ../bin/ubench.ll -o ../bin/ubench.O3.ll
+opt -S -load libMarkLoopsToTransform.so -mark-loops -require-delinquent=false -bench-name STAMP-ubench -o ../bin/ubench.marked.ll ../bin/ubench.O3.ll;
+
+####### (2) EXTRACT LOOPS (libTMLoopExtract): GENERATE source.tm-gran1-tm-extract.ll from each source.marked.ll (via source.tm-gran.ll)
+
+#### <ubench.c>
+
+opt -S -loop-simplify -reg2mem -licm -load libTMLoopChunk.so -tm-loop-chunk -bench-name STAMP-ubench -mem2reg -o ../bin/ubench.tm-gran.ll ../bin/ubench.marked.ll
+opt -S -load libTMLoopExtract.so -aggregate-extracted-args -tm-loop-extract -is-dae -bench-name STAMP-ubench -o ../bin/ubench.tm-gran1.tm-extract.ll ../bin/ubench.tm-gran.ll; \
+
+#### <worker.c>
+
+opt -S -loop-simplify -reg2mem -licm -load libTMLoopChunk.so -tm-loop-chunk -bench-name STAMP-ubench -mem2reg -o ../bin/worker.tm-gran.ll ../bin/worker.marked.ll
+opt -S -load libTMLoopExtract.so -aggregate-extracted-args -tm-loop-extract -is-dae -bench-name STAMP-ubench -o ../bin/worker.tm-gran1.tm-extract.ll ../bin/worker.tm-gran.ll; \
+
+####### (3) GENERATE benchmark.tm-gran1-tm-dae.ll by linking all individual source.tm-gran1-tm-extract.ll and O3.ll from libraries
+
+llvm-link -S -o ../bin/STAMP-ubench.tm-gran1.tm-dae.ll ../bin/ubench.tm-gran1.tm-extract.ll ../bin/worker.tm-gran1.tm-extract.ll ../../STAMP-include/lib/mt19937ar.O3.ll ../../STAMP-include/lib/random.O3.ll ../../STAMP-include/lib/thread.O3.ll ../../STAMP-include/lib/vector.O3.ll ../../STAMP-include/lib/memory.O3.ll
+
+####### (4) GENERATE benchmark.tm-gran1.tm-indir25.tm.dae.O3.ll from benchmark.tm-gran1-tm-dae.ll by TMKernelPrefetch optimizer pass
+
+opt -S -load libTMFKernelPrefetch.so -tbaa -basicaa -tm-f-kernel-prefetch  -indir-thresh 25 -follow-partial -always-inline -load libRemoveRedundantPref.so -rrp -o ../bin/STAMP-ubench.tm-gran1.tm-indir25.tm-dae.O3.ll ../bin/STAMP-ubench.tm-gran1.tm-dae.ll
+
+
+### Unused !! worker.gran.ll generated but unused
+opt -S -loop-simplify -reg2mem -licm -load libLoopChunk.so -loop-chunk -bench-name STAMP-ubench -mem2reg -o ../bin/worker.gran.ll ../bin/worker.marked.ll
+
+clang++  -O3 -mrtm -Wno-override-module -pthread -DHTM -DOLD_RTM_MACROSES -O3 -mrtm -Wno-override-module ../bin/STAMP-ubench.tm-gran1.tm-indir25.tm-dae.O3.ll ../bin/STAMP-ubench.tm-gran1.tm-indir25.tm-dae.GV_DAE.ll ../../STAMP-include/gem5/m5op_x86.o ../../STAMP-include/gem5/m5ops_wrapper.o ../../STAMP-include/perf/perf_counters.o  -static libDAE_prof_ST.a -lcpufreq -o ../bin/STAMP-ubench.tm-gran1.tm-indir25.tm-dae

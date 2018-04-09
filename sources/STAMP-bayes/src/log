@@ -1,0 +1,206 @@
+make PERF_TOOL= -C ../../STAMP-include/perf
+make[1]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include/perf'
+make -f Makefile.empty
+make[2]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include/perf'
+gcc -O3 -Wall -I../gem5  -O3 -Wall -c perf_counters.c -o perf_counters.o
+make[2]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include/perf'
+make[1]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include/perf'
+make -C ../../STAMP-include
+make[1]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include'
+make -C lib 
+make[2]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include/lib'
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 avltree.c -S -emit-llvm -o avltree.O3.ll
+avltree.c:394:10: warning: absolute value function 'abs' given an argument of type 'long' but has parameter of type 'int' which may cause truncation of value [-Wabsolute-value]
+    if ( abs ( s->balance ) > 1 ) {
+         ^
+avltree.c:394:10: note: use function 'labs' instead
+    if ( abs ( s->balance ) > 1 ) {
+         ^~~
+         labs
+avltree.c:456:10: warning: absolute value function 'abs' given an argument of type 'long' but has parameter of type 'int' which may cause truncation of value [-Wabsolute-value]
+    if ( abs ( s->balance ) > 1 ) {
+         ^
+avltree.c:456:10: note: use function 'labs' instead
+    if ( abs ( s->balance ) > 1 ) {
+         ^~~
+         labs
+avltree.c:547:12: warning: absolute value function 'abs' given an argument of type 'long' but has parameter of type 'int' which may cause truncation of value [-Wabsolute-value]
+      if ( abs ( up[top]->balance ) == 1 )
+           ^
+avltree.c:547:12: note: use function 'labs' instead
+      if ( abs ( up[top]->balance ) == 1 )
+           ^~~
+           labs
+avltree.c:549:17: warning: absolute value function 'abs' given an argument of type 'long' but has parameter of type 'int' which may cause truncation of value [-Wabsolute-value]
+      else if ( abs ( up[top]->balance ) > 1 ) {
+                ^
+avltree.c:549:17: note: use function 'labs' instead
+      else if ( abs ( up[top]->balance ) > 1 ) {
+                ^~~
+                labs
+avltree.c:640:12: warning: absolute value function 'abs' given an argument of type 'long' but has parameter of type 'int' which may cause truncation of value [-Wabsolute-value]
+      if ( abs ( up[top]->balance ) == 1 )
+           ^
+avltree.c:640:12: note: use function 'labs' instead
+      if ( abs ( up[top]->balance ) == 1 )
+           ^~~
+           labs
+avltree.c:642:17: warning: absolute value function 'abs' given an argument of type 'long' but has parameter of type 'int' which may cause truncation of value [-Wabsolute-value]
+      else if ( abs ( up[top]->balance ) > 1 ) {
+                ^
+avltree.c:642:17: note: use function 'labs' instead
+      else if ( abs ( up[top]->balance ) > 1 ) {
+                ^~~
+                labs
+6 warnings generated.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 bitmap.c -S -emit-llvm -o bitmap.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 hash.c -S -emit-llvm -o hash.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 hashtable.c -S -emit-llvm -o hashtable.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 heap.c -S -emit-llvm -o heap.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 list.c -S -emit-llvm -o list.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 memory.c -S -emit-llvm -o memory.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 mt19937ar.c -S -emit-llvm -o mt19937ar.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 pair.c -S -emit-llvm -o pair.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 queue.c -S -emit-llvm -o queue.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 random.c -S -emit-llvm -o random.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 rbtree.c -S -emit-llvm -o rbtree.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 thread.c -S -emit-llvm -o thread.O3.ll
+thread.c:370:10: warning: unused variable 'msr_path' [-Wunused-variable]
+    char msr_path[16];
+         ^
+thread.c:371:16: warning: unused variable 'cpusetp' [-Wunused-variable]
+    cpu_set_t *cpusetp;
+               ^
+thread.c:372:12: warning: unused variable 'size' [-Wunused-variable]
+    size_t size;
+           ^
+thread.c:373:9: warning: unused variable 'ret' [-Wunused-variable]
+    int ret;
+        ^
+4 warnings generated.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang -Wall -DOLD_RTM_MACROSES -DSET_AFFINITY -DX86make -pthread -O3 vector.c -S -emit-llvm -o vector.O3.ll
+make[2]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include/lib'
+make -C gem5 
+make[2]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-include/gem5'
+gcc  -O2 -DM5OP_ADDR=0xFFFF0000 -pthread -fno-leading-underscore -I/benchmarks/libs/xaction/ -o m5.o -c m5.c
+m5.c: In function ‘write_file’:
+m5.c:133:9: warning: ‘return’ with no value, in function returning non-void
+         return;
+         ^
+m5.c: In function ‘do_load_symbol’:
+m5.c:251:5: warning: implicit declaration of function ‘m5_loadsymbol’ [-Wimplicit-function-declaration]
+     m5_loadsymbol(addr, symbol);
+     ^
+m5.c: In function ‘read_file’:
+m5.c:120:9: warning: ignoring return value of ‘write’, declared with attribute warn_unused_result [-Wunused-result]
+         write(dest_fid, buf, len);
+         ^
+gcc -O2 -DM5OP_ADDR=0xFFFF0000 -pthread -fno-leading-underscore -I/benchmarks/libs/xaction/ -o m5op_x86.o -c m5op_x86.S
+gcc  -O2 -DM5OP_ADDR=0xFFFF0000 -pthread -fno-leading-underscore -I/benchmarks/libs/xaction/ -o m5ops_wrapper.o -c m5ops_wrapper.c
+gcc -o m5 m5.o m5op_x86.o m5ops_wrapper.o -lpthread
+make[2]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include/gem5'
+make[1]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-include'
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DLEARNER_TRY_REMOVE -DLEARNER_TRY_REVERSE -O3 -mrtm -Wno-override-module -I ../../STAMP-include/lib adtree.c -S -emit-llvm -o ../bin/adtree.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/adtree.ll -o ../bin/adtree.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-bayes \
+-o ../bin/adtree.marked.ll ../bin/adtree.O3.ll; \
+
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DLEARNER_TRY_REMOVE -DLEARNER_TRY_REVERSE -O3 -mrtm -Wno-override-module -I ../../STAMP-include/lib bayes.c -S -emit-llvm -o ../bin/bayes.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/bayes.ll -o ../bin/bayes.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-bayes \
+-o ../bin/bayes.marked.ll ../bin/bayes.O3.ll; \
+
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DLEARNER_TRY_REMOVE -DLEARNER_TRY_REVERSE -O3 -mrtm -Wno-override-module -I ../../STAMP-include/lib data.c -S -emit-llvm -o ../bin/data.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/data.ll -o ../bin/data.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-bayes \
+-o ../bin/data.marked.ll ../bin/data.O3.ll; \
+
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DLEARNER_TRY_REMOVE -DLEARNER_TRY_REVERSE -O3 -mrtm -Wno-override-module -I ../../STAMP-include/lib learner.c -S -emit-llvm -o ../bin/learner.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/learner.ll -o ../bin/learner.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-bayes \
+-o ../bin/learner.marked.ll ../bin/learner.O3.ll; \
+
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DLEARNER_TRY_REMOVE -DLEARNER_TRY_REVERSE -O3 -mrtm -Wno-override-module -I ../../STAMP-include/lib net.c -S -emit-llvm -o ../bin/net.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/net.ll -o ../bin/net.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-bayes \
+-o ../bin/net.marked.ll ../bin/net.O3.ll; \
+
+mkdir -p ../bin/.
+/home/derumigny/daedal/compiler/build/llvm-build/bin/clang  -pthread -DHTM -DOLD_RTM_MACROSES -DLIST_NO_DUPLICATES -DLEARNER_TRY_REMOVE -DLEARNER_TRY_REVERSE -O3 -mrtm -Wno-override-module -I ../../STAMP-include/lib sort.c -S -emit-llvm -o ../bin/sort.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -O3 ../bin/sort.ll -o ../bin/sort.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libMarkLoopsToTransform.so \
+-mark-loops -require-delinquent=false -bench-name STAMP-bayes \
+-o ../bin/sort.marked.ll ../bin/sort.O3.ll; \
+
+make ../bin/STAMP-bayes.tm-arg
+make[1]: se entra en el directorio '/home/derumigny/daedal/sources/STAMP-bayes/src'
+/home/derumigny/daedal/compiler/build/llvm-build/bin/llvm-link -S -o ../bin/STAMP-bayes.original.O3.ll ../bin/adtree.O3.ll ../bin/bayes.O3.ll ../bin/data.O3.ll ../bin/learner.O3.ll ../bin/net.O3.ll ../bin/sort.O3.ll ../../STAMP-include/lib/bitmap.O3.ll ../../STAMP-include/lib/list.O3.ll ../../STAMP-include/lib/mt19937ar.O3.ll ../../STAMP-include/lib/queue.O3.ll ../../STAMP-include/lib/random.O3.ll ../../STAMP-include/lib/thread.O3.ll ../../STAMP-include/lib/vector.O3.ll ../../STAMP-include/lib/memory.O3.ll
+/home/derumigny/daedal/compiler/build/llvm-build/bin/opt -S -load /home/derumigny/daedal/compiler/build/projects-build/lib/libTMArgsPrefetcher.so -tm-prefetch-args -o ../bin/STAMP-bayes.tm-arg.O3.ll ../bin/STAMP-bayes.original.O3.ll
+
+TMArgPrefetcher: createTaskList: Instructions for calls: 4
+TMArgPrefetcher: createTaskList: Instructions for calls: 1
+TMArgPrefetcher: learnStructure: Instructions for calls: 2
+TMArgPrefetcher: learnStructure: Instructions for calls: 3
+TMArgPrefetcher: learnStructure: Instructions for calls: 4
+TMArgPrefetcher: learnStructure: Instructions for calls: 2
+TMArgPrefetcher: learnStructure: Instructions for calls: 4
+TMArgPrefetcher: learnStructure: Instructions for calls: 2
+TMArgPrefetcher: learnStructure: Instructions for calls: 4
+TMArgPrefetcher: learnStructure: Instructions for calls: 4
+TMArgPrefetcher: learnStructure: Instructions for calls: 3
+TMArgPrefetcher: learnStructure: Instructions for calls: 10
+TMArgPrefetcher: learnStructure: Instructions for calls: 5
+TMArgPrefetcher: learnStructure: Instructions for calls: 6
+TMArgPrefetcher: learnStructure: Instructions for calls: 1
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %124 = bitcast %struct.list_node** %it to i8*
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %125 = bitcast %struct.list_node** %it to i8*
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %160 = bitcast %struct.list_node** %it to i8*
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %233 = bitcast %struct.list_node** %it to i8*
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %297 = bitcast %struct.list_node** %it to i8*
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %330 = bitcast %struct.list_node** %it to i8*
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %409 = bitcast %struct.list_node** %it to i8*
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %410 = bitcast %struct.list_node** %it to i8*
+Instruction does not dominate all uses!
+  %it3 = alloca %struct.list_node*, align 8
+  %411 = bitcast %struct.list_node** %it3 to i8*
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %537 = bitcast %struct.list_node** %it to i8*
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %623 = bitcast %struct.list_node** %it to i8*
+Instruction does not dominate all uses!
+  %it = alloca %struct.list_node*, align 8
+  %624 = bitcast %struct.list_node** %it to i8*
+LLVM ERROR: Broken function found, compilation aborted!
+../../common/DAE/Makefile.defaults:93: fallo en las instrucciones para el objetivo '../bin/STAMP-bayes.tm-arg.O3.ll'
+make[1]: *** [../bin/STAMP-bayes.tm-arg.O3.ll] Error 1
+make[1]: se sale del directorio '/home/derumigny/daedal/sources/STAMP-bayes/src'
+../../common/DAE/Makefile.defaults:63: fallo en las instrucciones para el objetivo 'all'
+make: *** [all] Error 2
